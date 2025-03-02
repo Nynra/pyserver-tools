@@ -1,0 +1,24 @@
+[project]
+name = "pyserver_tools"
+version = "0.0.1"
+authors = [{ name = "Nynra", email = "nynradev@pm.me" }]
+description = "A Django app with some usefull functions and permissions."
+readme = { file = "README.txt", content-type = "text/markdown" }
+requires-python = ">=3.10"
+dependencies = ["Django>=4.0.0", "django-appconf>=1.0.4"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: BSD License",
+]
+license = { file = "LICENSE" }
+
+[project.urls]
+repository = 'https://github.com/Nynra/pyserver-tools'
+homepage = 'https://github.com/Nynra/pyserver-tools/blob/main/README.md'
+issues = 'https://github.com/Nynra/pyserver-tools/issues'
+changelog = 'https://github.com/Nynra/pyserver-tools/blob/main/CHANGELOG.md'
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm>=8.0"]
+build-backend = "setuptools.build_meta"
