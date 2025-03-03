@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from pyserver_tools.utils import create_group
+from django.core.management import execute_from_command_line
 
 
 class Command(BaseCommand):
@@ -36,12 +36,10 @@ class Command(BaseCommand):
     def _run_pyserver_users_commands(self, options):
         # Run the django command to create the admin group
         verbose = options.get("verbose", True)
+        if options.get("force", False):
+            force = ["--force", "True"]
+        else:
+            force = []
         if verbose:
             self.stdout.write("Creating the admin group")
-        self.call_command("create_admin_group", **options)
-        if verbose:
-            self.stdout.write("Creating the user group")
-        self.call_command("create_user_group", **options)
-        if verbose:
-            self.stdout.write("Creating the readonly group")
-        self.call_command("create_readonly_group", **options)
+        execute_from_command_line(["manage.py", "create_admin_group"] + force)
