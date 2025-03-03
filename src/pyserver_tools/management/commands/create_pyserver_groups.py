@@ -33,6 +33,17 @@ class Command(BaseCommand):
                     "No `pyserver_users` app found. Skipping group creation."
                 )
 
+        # Check if the `pyserver_cve_scraper` app is installed
+        try:
+            import pyserver_cve_scraper
+
+            self._run_pyserver_cve_scraper_commands(options)
+        except ImportError:
+            if verbose:
+                self.stdout.write(
+                    "No `pyserver_cve_scraper` app found. Skipping group creation."
+                )
+
     def _run_pyserver_users_commands(self, options):
         # Run the django command to create the admin group
         verbose = options.get("verbose", True)
@@ -43,3 +54,14 @@ class Command(BaseCommand):
         if verbose:
             self.stdout.write("Creating the admin group")
         execute_from_command_line(["manage.py", "create_admin_group"] + force)
+
+    def _run_pyserver_cve_scraper_commands(self, options):
+        # Run the django command to create the scraping groups
+        verbose = options.get("verbose", True)
+        if options.get("force", False):
+            force = ["--force", "True"]
+        else:
+            force = []
+        if verbose:
+            self.stdout.write("Creating the scraping groups")
+        execute_from_command_line(["manage.py", "create_cve_scraper_groups"] + force)
