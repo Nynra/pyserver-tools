@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4 text-center">
+    <h1>500 Error: Internal Server Error</h1>
+    <p>Oops! Something went wrong on our end. We're working to fix this issue.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Go Home</a>
+</div>
+{% endblock %}

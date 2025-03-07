@@ -5,6 +5,11 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+def check_in_group(user, group_name: str) -> bool:
+    """Check if the user is in the group."""
+    return is_in_group(user, group_name)
+
+
 def is_in_group(user, group_name: str) -> bool:
     """Check if the user is in the group."""
     try:
