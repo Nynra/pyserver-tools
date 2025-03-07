@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 User = get_user_model()
@@ -35,6 +36,8 @@ class HasGroupPermission:
         Thanks [inoyatov](https://gist.github.com/inoyatov/d4bca6d07bd57fdfe6bbc3872a4b8b7f) for the github gist
     """
 
+    permission_groups = {}  # By default, no access
+
     def has_permission(self, request, view):
         required_groups = view.permission_groups.get(view.action)
         if required_groups == None:
@@ -48,6 +51,7 @@ class HasGroupPermission:
                     for group_name in required_groups
                 ]
             )
+        
 
 
 class IsAuthenticated:
