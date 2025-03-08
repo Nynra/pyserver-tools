@@ -76,6 +76,12 @@ class PyserverBaseCreateView(CreateView):
         if isinstance(self.list_view_name, type(None)):
             raise AttributeError("list_view_name must be set in the subclass")
 
+    def get_form_kwargs(self):
+        """Pass the current user to the form."""
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # Pass the user to the form
+        return kwargs
+
     def get_success_url(self) -> str:
         return reverse_lazy(self.detail_view_name, args=[self.object.pk])
 
@@ -125,6 +131,12 @@ class PyserverBaseUpdateView(UpdateView):
         )
         return reverse_lazy(self.detail_view_name, args=[self.object.pk])
 
+    def get_form_kwargs(self):
+        """Pass the current user to the form."""
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # Pass the user to the form
+        return kwargs
+    
     # For the template to render correctly the model name variable and list url have to be passed
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -166,6 +178,12 @@ class PyserverBaseDeleteView(DeleteView):
         )
         return reverse_lazy(self.list_view_name)
 
+    def get_form_kwargs(self):
+        """Pass the current user to the form."""
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # Pass the user to the form
+        return kwargs
+
     def form_valid(self, form):
         # Check if the user is also the user in the model object user_config
         if self.object.user_config.user == self.request.user:
@@ -198,7 +216,7 @@ class PyserverBaseDetailView(DetailView):
     """
 
     template_name : str = "tools_templates/detail_model.html"
-    detail_form : BaseModelForm = None
+    form_class : BaseModelForm = None
     model_name : str = None
     list_view_name : str = None
     delete_view_name : str = None
@@ -208,8 +226,8 @@ class PyserverBaseDetailView(DetailView):
         super().__init__(*args, **kwargs)
         if isinstance(self.template_name, type(None)):
             raise AttributeError("template_name must be set in the subclass")
-        if isinstance(self.detail_form, type(None)):
-            raise AttributeError("detail_form must be set in the subclass")
+        if isinstance(self.form_class, type(None)):
+            raise AttributeError("form_class must be set in the subclass")
         if isinstance(self.model_name, type(None)):
             raise AttributeError("model_name must be set in the subclass")
         if isinstance(self.list_view_name, type(None)):
@@ -221,7 +239,7 @@ class PyserverBaseDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = self.detail_form(
+        context["form"] = self.form_class(
             instance=self.object
         )  # Add the form to the context
         context["item"] = self.object
