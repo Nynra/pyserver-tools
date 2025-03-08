@@ -1,0 +1,9 @@
+{% extends 'server_base.html' %}
+
+{% block content %}
+<div class="container mt-4 text-center">
+    <h1>404 Error: Page Not Found</h1>
+    <p>Oops! The page you are looking for might be unavailable or does not exist.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Go Home</a>
+</div>
+{% endblock %}

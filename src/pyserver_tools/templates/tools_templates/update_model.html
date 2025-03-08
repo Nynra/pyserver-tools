@@ -1,0 +1,20 @@
+{% extends 'server_base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Update {{ model_name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table">
+                    {{ form.as_table }}
+                </table>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+    <a href="{% url list_url %}" class="btn btn-secondary mt-3">Back to list</a>
+    <a href="{{ previous_page_url }}" class="btn btn-secondary mt-3">Return</a>
+</div>
+{% endblock %}
