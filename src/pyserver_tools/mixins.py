@@ -7,7 +7,5 @@ class HasGroupPermissionMixin(HasGroupPermission):
 
     Alias for `HasGroupPermission`.
     """
-    
-    pass
 
-    
+    pass

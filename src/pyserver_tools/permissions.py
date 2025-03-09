@@ -51,7 +51,6 @@ class HasGroupPermission:
                     for group_name in required_groups
                 ]
             )
-        
 
 
 class IsAuthenticated:

@@ -16,8 +16,8 @@
 
     <!-- Add Back to Home and Back to List buttons -->
     <div class="button-box mt-3">
-        <a type="button" class="btn btn-secondary mr-2" href="{% url update_url item.pk %}">Edit</a>
-        <a type="button" class="btn btn-danger mr-2" href="{% url delete_url item.pk %}">Delete</a>
+        <a type="button" class="btn btn-secondary mr-2" href="{% url update_url object.pk %}">Edit</a>
+        <a type="button" class="btn btn-danger mr-2" href="{% url delete_url object.pk %}">Delete</a>
         <a type="button" class="btn btn-primary" href="{% url list_url %}">Back to List</a>
         <a type="button" class="btn btn-primary ml-2" href="{{ previous_page_url }}">Return</a>
     </div>

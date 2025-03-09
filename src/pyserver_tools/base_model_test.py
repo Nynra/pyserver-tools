@@ -33,7 +33,9 @@ class ModelTestBase:
             self.assertEqual(
                 getattr(self.model, key),
                 self.data[key],
-                "Attribute {} is not correct, expected {}, got {}".format(key, self.data[key], getattr(self.model, key)),
+                "Attribute {} is not correct, expected {}, got {}".format(
+                    key, self.data[key], getattr(self.model, key)
+                ),
             )
 
     def test_create(self):
@@ -47,5 +49,7 @@ class ModelTestBase:
             self.assertEqual(
                 getattr(model, key),
                 self.data[key],
-                "Attribute {} is not correct, expected {}, got {}".format(key, self.data[key], getattr(model, key)),
+                "Attribute {} is not correct, expected {}, got {}".format(
+                    key, self.data[key], getattr(model, key)
+                ),
             )
