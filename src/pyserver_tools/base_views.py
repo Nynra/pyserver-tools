@@ -292,6 +292,7 @@ class PyserverBaseListView(ListView):
     - update_view_name: The name of the update view.
     - delete_view_name: The name of the delete view.
     - create_view_name: The name of the create view.
+    - detail_view_name: The name of the detail view.
     - list_view_name: The name of the list view.
     """
 
@@ -299,6 +300,7 @@ class PyserverBaseListView(ListView):
     model_name: str = None
     update_view_name: str = None
     delete_view_name: str = None
+    detail_view_name: str = None
     create_view_name: str = None
     list_view_name: str = None
 
@@ -312,6 +314,8 @@ class PyserverBaseListView(ListView):
             raise AttributeError("update_view_name must be set in the subclass")
         if isinstance(self.delete_view_name, type(None)):
             raise AttributeError("delete_view_name must be set in the subclass")
+        if isinstance(self.detail_view_name, type(None)):
+            raise AttributeError("detail_view_name must be set in the subclass")
         if isinstance(self.create_view_name, type(None)):
             raise AttributeError("create_view_name must be set in the subclass")
         if isinstance(self.list_view_name, type(None)):
@@ -340,6 +344,7 @@ class PyserverBaseListView(ListView):
         context["model_name"] = self.model_name
         context["update_url"] = self.update_view_name
         context["delete_url"] = self.delete_view_name
+        context["detail_url"] = self.detail_view_name
         context["create_url"] = self.create_view_name
         context["list_url"] = self.list_view_name
         context["previous_page_url"] = self.request.META.get("HTTP_REFERER", "/")
