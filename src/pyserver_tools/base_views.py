@@ -58,12 +58,14 @@ class PyserverBaseCreateView(CreateView):
     - model_name: The name of the model.
     - detail_view_name: The name of the detail view.
     - list_view_name: The name of the list view.
+    - form_class: The form to use for the create view.
     """
 
     template_name : str = "tools_templates/create_model.html"
     model_name : str = None
     detail_view_name : str = None
     list_view_name : str = None
+    form_class : BaseModelForm = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -75,18 +77,30 @@ class PyserverBaseCreateView(CreateView):
             raise AttributeError("detail_view_name must be set in the subclass")
         if isinstance(self.list_view_name, type(None)):
             raise AttributeError("list_view_name must be set in the subclass")
-
-    def get_form_kwargs(self):
-        """Pass the current user to the form."""
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user  # Pass the user to the form
-        return kwargs
+        if isinstance(self.form_class, type(None)):
+            raise AttributeError("form_class must be set in the subclass")
 
     def get_success_url(self) -> str:
+        """Return the URL to redirect to after a successful form submission.
+        
+        Generate the success url using the `detail_view_name` and the primary key of the object.
+        """
         return reverse_lazy(self.detail_view_name, args=[self.object.pk])
 
-    # For the template to render correctly the model name variable and list url have to be passed
-    def get_context_data(self, **kwargs):
+    def get_form_kwargs(self):
+        """Pass the current user to the form.
+        
+        Insert the current user into the form kwargs as `request_user`.
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs['request_user'] = self.request.user  # Pass the user to the form
+        return kwargs
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        """Add the model name and list url to the context.
+        
+        Add the model name and list url to the context so that the template can render correctly.
+        """
         context = super().get_context_data(**kwargs)
         context["model_name"] = self.model_name
         context["list_url"] = self.list_view_name
@@ -104,13 +118,14 @@ class PyserverBaseUpdateView(UpdateView):
     - model_name: The name of the model.
     - detail_view_name: The name of the detail view.
     - list_view_name: The name of the list view.
+    - form_class: The form to use for the update view.
     """
 
     template_name : str = "tools_templates/update_model.html"
-    context_object_name : str = None
     model_name : str = None
     detail_view_name : str = None
     list_view_name : str = None
+    form_class : BaseModelForm = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -122,23 +137,30 @@ class PyserverBaseUpdateView(UpdateView):
             raise AttributeError("detail_view_name must be set in the subclass")
         if isinstance(self.list_view_name, type(None)):
             raise AttributeError("list_view_name must be set in the subclass")
+        if isinstance(self.form_class, type(None)):
+            raise AttributeError("form_class must be set in the subclass")
 
     def get_success_url(self) -> str:
-        logger.info(
-            "User {} updated a {}, with id {}".format(
-                self.request.user, self.model.__name__, self.object.pk
-            )
-        )
+        """Return the URL to redirect to after a successful form submission.
+        
+        Generate the success url using the `detail_view_name` and the primary key of the object.
+        """
         return reverse_lazy(self.detail_view_name, args=[self.object.pk])
 
-    def get_form_kwargs(self):
-        """Pass the current user to the form."""
+    def get_form_kwargs(self) -> dict[str, Any]:
+        """Pass the current user to the form.
+        
+        Insert the current user into the form kwargs as `request_user`.
+        """
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user  # Pass the user to the form
+        kwargs['request_user'] = self.request.user  # Pass the user to the form
         return kwargs
     
-    # For the template to render correctly the model name variable and list url have to be passed
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        """Add the model name and list url to the context.
+
+        Add the model name and list url to the context so that the template can render correctly.
+        """
         context = super().get_context_data(**kwargs)
         context["model_name"] = self.model_name
         context["list_url"] = self.list_view_name
@@ -150,16 +172,21 @@ class PyserverBaseDeleteView(DeleteView):
     """Base view for deleting an existing model instance.
 
     This is a base class for deleting an existing model instance, it should be subclassed
-    and not used directly. The subclass should set the following attributes:
+    and not used directly. This class does not check if the object exists or if the user
+    has permission to delete the object.
+    
+    The subclass should set the following attributes:
 
     - template_name: The name of the template to render.
     - model_name: The name of the model.
     - list_view_name: The name of the list view.
+    - form_class: The form to use for the delete view.
     """
 
     template_name : str = "tools_templates/delete_model.html"
     model_name : str = None
     list_view_name : str = None
+    form_class : BaseModelForm = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -169,31 +196,31 @@ class PyserverBaseDeleteView(DeleteView):
             raise AttributeError("model_name must be set in the subclass")
         if isinstance(self.list_view_name, type(None)):
             raise AttributeError("list_view_name must be set in the subclass")
+        if isinstance(self.form_class, type(None)):
+            raise AttributeError("form_class must be set in the subclass")
 
     def get_success_url(self) -> str:
-        logger.info(
-            "User {} deleted a {}, with id {}".format(
-                self.request.user, self.model.__name__, self.object.pk
-            )
-        )
+        """Return the URL to redirect to after a successful form submission.
+
+        Generate the success url using the `list_view_name`.
+        """
         return reverse_lazy(self.list_view_name)
 
-    def get_form_kwargs(self):
-        """Pass the current user to the form."""
+    def get_form_kwargs(self) -> dict[str, Any]:
+        """Pass the current user to the form.
+        
+        Insert the current user into the form kwargs as `request_user`.
+        """
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user  # Pass the user to the form
+        kwargs['request_user'] = self.request.user  # Pass the user to the form
+        kwargs['instance'] = self.object
         return kwargs
 
-    def form_valid(self, form):
-        # Check if the user is also the user in the model object user_config
-        if self.object.user_config.user == self.request.user:
-            return super().form_valid(form)
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        """Add the model name and list url to the context.
 
-        # If the user does not have access return default 403 page
-        return super().form_invalid(form)
-
-    # For the template to render correctly the model name variable and list url have to be passed
-    def get_context_data(self, **kwargs):
+        Add the model name and list url to the context so that the template can render correctly.
+        """
         context = super().get_context_data(**kwargs)
         context["model_name"] = self.model_name
         context["list_url"] = self.list_view_name
@@ -208,7 +235,7 @@ class PyserverBaseDetailView(DetailView):
     and not used directly. The subclass should set the following attributes:
 
     - template_name: The name of the template to render.
-    - detail_form: The form to use for the detail view.
+    - form_class: The form to use for the detail view.
     - model_name: The name of the model.
     - list_view_name: The name of the list view.
     - delete_view_name: The name of the delete view.
@@ -236,13 +263,23 @@ class PyserverBaseDetailView(DetailView):
             raise AttributeError("delete_view_name must be set in the subclass")
         if isinstance(self.update_view_name, type(None)):
             raise AttributeError("update_view_name must be set in the subclass")
+        
+    def get_form_kwargs(self) -> dict[str, Any]:
+        """Pass the current user to the form.
+        
+        Insert the current user into the form kwargs as `request_user`.
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs['request_user'] = self.request.user
+        kwargs['instance'] = self.object
+        return kwargs
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        """Add the model name and list url to the context.
+
+        Add the model name and list url to the context so that the template can render correctly.
+        """
         context = super().get_context_data(**kwargs)
-        context["form"] = self.form_class(
-            instance=self.object
-        )  # Add the form to the context
-        context["item"] = self.object
         context["model_name"] = self.model_name
         context["list_url"] = self.list_view_name
         context["delete_url"] = self.delete_view_name
@@ -289,7 +326,7 @@ class PyserverBaseListView(ListView):
             raise AttributeError("list_view_name must be set in the subclass")
 
     def get(self, request, *args, **kwargs):
-        # Return the page
+        """Handle GET requests."""
         page_obj = self._get_pages(request)
         self.object_list = page_obj.object_list
         context = self.get_context_data()
@@ -297,7 +334,7 @@ class PyserverBaseListView(ListView):
         return render(request, self.template_name, context)
     
     def _get_pages(self, request) -> QuerySet:
-        """Return the pages for the queryset."""
+        """Return the pages object for the queryset."""
         # Get the page number from the request
         page_number = request.GET.get("page")
         queryset = self.get_queryset()
@@ -308,7 +345,6 @@ class PyserverBaseListView(ListView):
     # For the template to render correctly the model name variable and list url have to be passed
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         context["model_name"] = self.model_name
         context["update_url"] = self.update_view_name
         context["delete_url"] = self.delete_view_name
