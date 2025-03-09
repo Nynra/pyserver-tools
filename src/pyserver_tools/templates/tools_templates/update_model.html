@@ -2,17 +2,25 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Update {{ model_name }}</h1>
-    <form method="post">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-md-6">
-                {{ form.as_table }}
-            </div>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Update {{ model_name }}</h3>
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
-    <a href="{% url list_url %}" class="btn btn-secondary mt-3">Back to list</a>
-    <a href="{{ previous_page_url }}" class="btn btn-secondary mt-3">Return</a>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">  <!-- Full-width for form fields -->
+                        {{ form.as_p }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success mt-3">Save Changes</button>
+            </form>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{% url list_url %}" class="btn btn-outline-secondary">Back to List</a>
+            <a href="{{ previous_page_url }}" class="btn btn-outline-secondary">Return</a>
+        </div>
+    </div>
 </div>
 {% endblock %}
