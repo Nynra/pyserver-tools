@@ -5,7 +5,7 @@ authors = [{ name = "Nynra", email = "nynradev@pm.me" }]
 description = "A Django app with some usefull functions and permissions."
 readme = { file = "README.txt", content-type = "text/markdown" }
 requires-python = ">=3.10"
-dependencies = ["Django>=4.0.0", "django-appconf>=1.0.4"]
+dependencies = ["Django>=4.0.0"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
