@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 def check_in_group(user, group_name: str) -> bool:
-    """Check if the user is in the group."""
+    """Check if the user is in the group, wrapper for the `is_in_group` function."""
     return is_in_group(user, group_name)
 
 
@@ -15,7 +15,7 @@ def is_in_group(user, group_name: str) -> bool:
     """Check if the user is in the group."""
     try:
         return (
-            Group.objects.get(name=group_name).user_set.filter(uuid=user.uuid).exists()
+            Group.objects.get(name=group_name).user_set.filter(pk=user.pk).exists()
         )
     except Group.DoesNotExist:
         return False
@@ -27,13 +27,18 @@ class HasGroupPermission:
 
     The groups should be specified in the view's `permission_groups` attribute
     in the following format:
+    ```
     {
         "action": ["group1", "group2", ...],
         ...
     }
+    ```
 
     .. note::
         Thanks [inoyatov](https://gist.github.com/inoyatov/d4bca6d07bd57fdfe6bbc3872a4b8b7f) for the github gist
+
+    .. attention::
+        This permission class assumes the user is authenticated.
     """
 
     permission_groups = {}  # By default, no access
@@ -41,15 +46,16 @@ class HasGroupPermission:
     def has_permission(self, request, view):
         required_groups = view.permission_groups.get(view.action)
         if required_groups == None:
+            # If the action is not specified, always deny access
             return False
         elif "_Public" in required_groups:
+            # If the action is public, always allow access
             return True
         else:
+            # Check if the user is in the required action group
             return any(
-                [
-                    is_in_group(request.user, group_name)
-                    for group_name in required_groups
-                ]
+                check_in_group(request.user, group_name)
+                for group_name in required_groups
             )
 
 
