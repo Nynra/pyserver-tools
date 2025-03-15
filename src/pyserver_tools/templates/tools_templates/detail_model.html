@@ -1,32 +1,25 @@
 {% extends 'server_base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg border-0 w-100" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white text-center">
             <h3 class="mb-0">{{ model_name }} Details</h3>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <dl class="row">
-                        {% for field in form %}
-                        <dt class="col-sm-4 fw-bold">{{ field.label }}:</dt>
-                        <dd class="col-sm-8">{{ field.value }}</dd>
-                        {% endfor %}
-                    </dl>
-                </div>
-            </div>
+            <dl class="row">
+                {% for field in form %}
+                <dt class="col-5 fw-bold">{{ field.label }}:</dt>
+                <dd class="col-7">{{ field.value }}</dd>
+                {% endfor %}
+            </dl>
         </div>
-
-        <div class="card-footer d-flex justify-content-between">
-            <div>
-                <a href="{% url update_url object.pk %}" class="btn btn-warning">Edit</a>
-                <a href="{% url delete_url object.pk %}" class="btn btn-danger">Delete</a>
-            </div>
-            <div>
-                <a href="{% url list_url %}" class="btn btn-outline-secondary">Back to List</a>
-                <a href="{{ previous_page_url }}" class="btn btn-outline-secondary">Return</a>
+        <div class="card-footer d-grid gap-2">
+            <a href="{% url update_url object.pk %}" class="btn btn-warning">Edit</a>
+            <a href="{% url delete_url object.pk %}" class="btn btn-danger">Delete</a>
+            <div class="d-flex flex-column flex-md-row gap-2">
+                <a href="{% url list_url %}" class="btn btn-outline-secondary flex-grow-1">Back to List</a>
+                <a href="{{ previous_page_url }}" class="btn btn-outline-secondary flex-grow-1">Return</a>
             </div>
         </div>
     </div>

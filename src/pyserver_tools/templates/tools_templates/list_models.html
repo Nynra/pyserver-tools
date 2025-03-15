@@ -1,36 +1,31 @@
-
 {% extends 'server_base.html' %}
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row g-4">
-        <div class="col-lg-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">{{ model_name }} List</h3>
-                    <a href="{% url create_url %}" class="btn btn-outline-light btn-sm fw-bold">+ Create {{ model_name }}</a>
-                </div>
-                <div class="card-body">
-                    {% if items %}
-                    <ul class="list-group">
-                        {% for item in items %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{% url detail_url item.pk %}" class="text-decoration-none flex-grow-1">
-                                {{ item }}
-                            </a>
-                            <a href="{% url delete_url item.pk %}" class="btn btn-danger btn-sm ml-2">Delete</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p class="text-muted">No {{ model_name }} found.</p>
-                    {% endif %}
-                </div>
-                <div class="card-footer d-flex justify-content-between">
-                    <a href="{{ previous_page_url }}" class="btn btn-primary">Return</a>
-                </div>
-            </div>
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg border-0 w-100" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{ model_name }} List</h3>
+            <a href="{% url create_url %}" class="btn btn-outline-light btn-sm fw-bold">+ Create {{ model_name }}</a>
+        </div>
+        <div class="card-body">
+            {% if items %}
+            <ul class="list-group">
+                {% for item in items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url detail_url item.pk %}" class="text-decoration-none flex-grow-1">
+                        {{ item }}
+                    </a>
+                    <a href="{% url delete_url item.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted text-center">No {{ model_name }} found.</p>
+            {% endif %}
+        </div>
+        <div class="card-footer d-flex flex-column flex-md-row justify-content-between gap-2">
+            <a href="{{ previous_page_url }}" class="btn btn-outline-secondary flex-grow-1">Return</a>
         </div>
     </div>
 </div>
