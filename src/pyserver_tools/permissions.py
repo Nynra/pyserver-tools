@@ -43,8 +43,13 @@ class HasGroupPermission:
 
     permission_groups = {}  # By default, no access
 
-    def has_permission(self, request, view):
-        required_groups = view.permission_groups.get(view.action)
+    @classmethod
+    def has_permission(cls, request, view):
+        return cls.has_action_permission(request, view, view.action)
+
+    @staticmethod
+    def has_action_permission(request, view, action):
+        required_groups = view.permission_groups.get(action)
         if required_groups == None:
             # If the action is not specified, always deny access
             return False
